@@ -1,1 +1,10 @@
-# Graduation-Project
+# 基于机器视觉的物品抓取视觉标定方法设计
+我会在这里陆续上传我的毕业设计资料，暂时只有一个master分支，用于记录我的毕设历程。
+
+## 文件清单
+
+- 毕业任务书
+- 组会记录
+- Slides for presentation
+- openCV学习笔记
+- 一些素材图片
