@@ -88,6 +88,19 @@ int main(int argc, char** argv)
 
 
 # Lesson 3:图片色彩转换与保存
+## 预备知识
+- 色彩空间转换函数：`cvColor`
+	-  COLOR_BGR2GRAY = 6：彩色到灰度
+	- COLOR_GRAY2BGR = 8：灰度到彩色
+	- COLOR_BGR2HSV = 40：BGR到HSV
+	- COLOR_HSV2BGR = 54：HSV到BGR
+
+- 图像保存：`imwrite`(第一个参数，第二个参数)
+	- 第一个参数是保存路径：有时候要用双斜杠
+	- 第二个参数是保存对象
+
+
+
 
 ## 新建一个头文件：
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/f2319dbce3434f1490d24e08bd7a759e.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_11,color_FFFFFF,t_70,g_se,x_16)
@@ -195,3 +208,174 @@ int main(int argc, char** argv)
 - R、G、B三个通道各是八位，还有一个透明通道也是八位
 - R、G、B三个通道三位读取的顺序是B、G、R
 - H（0-180）、S（0-255）、V（0-255）：分别表示色相、饱和度、亮度
+
+
+
+
+
+# Lesson 4 :图像对象的创建与赋值
+## 上节回顾
+- 在创建的头文件中引入opencv库，引入名称空间，定义public方法
+
+
+	```cpp
+	#pragma once
+	#include<opencv2/opencv.hpp>//引入opencv库函数
+	
+	using namespace cv;//引入名称空间
+	
+	class quickdemo//定义一个新的类
+	{
+	public://定义全局方法
+		void color_Space_Convert(Mat & image);//定义一个色彩转换的方法
+		void mat_creation(Mat & image);//定义一个图像矩阵方法
+	};
+	```
+- 在新建的.cpp文件对头文件中定义的类实例化，并编写方法以便于main.cpp引用。
+
+
+
+## Mat基本结构
+![在这里插入图片描述](https://img-blog.csdnimg.cn/c5ad75c0386a45328597688ce12d482a.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_17,color_FFFFFF,t_70,g_se,x_16#pic_center)
+
+
+
+
+
+
+## 克隆(clone)、复制(copy)、赋值(=)
+
+
+- 赋值(=)：其中一个改变时，另外一个也改变
+
+
+	```cpp
+	m3 = Scalar(0,0,255);
+	Mat m4 = m3;//赋值，其中一个改变，另一个也改变
+	m4 = Scalar(255, 0, 0);
+	imshow("m3", m3);
+	imshow("m4", m4);
+	```
+
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/5287916c818442c589c69a55164ab3d5.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+- 克隆(clone)：对克隆后的值修改不会影响原来的值
+
+
+	```cpp
+	Mat m4 = m3.clone();
+	m4 = Scalar(246, 0, 255);
+	imshow("m3",m3);
+	imshow("m4", m4);
+	```
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/011540f94b234fa7b48a0b1d4e7b9403.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+- 复制copy：对复制后的值修改不影响原来的值
+
+
+	```cpp
+	Mat m4;
+	m3.copyTo(m4);
+	m4 = Scalar(65, 255, 90);
+	imshow("m3",m3);
+	imshow("m4", m4);
+	```
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/0ea5b5a4cd3c4d899fbf7d433debbb81.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+## 创建空白图像
+
+- 先创建变量：
+
+	```cpp
+	Mat m3 = Mat::zeros(Size(8,8),CV_8UC1)；
+	```
+	- Mat::zeros()表示创建全是0的矩阵
+	- Size(8,8)表示矩阵大小
+	- CV_8UC1中的8表示8位，UC表示无符号，1表示单个通道，也可以为三个
+
+- 方法中可以没有需要传入的参数：
+
+	```cpp
+	void mat_creation(不传入参数);//定义一个图像矩阵方法,括号里面为需要传入的参数，也可以没有
+	```
+
+- 接着在`main.cpp`中实例化第二个类：
+
+	```cpp
+	quickdemo qk2;
+	```
+
+- 调用方法
+在main.cpp中调用该方法，此时没有传入图片作为参数
+	```cpp
+	qk2.mat_creation();
+	```
+
+- 如果想要传入图片作为参数，要重新定义方法：要在头文件，方法文件，main.cpp都更改为
+
+	```cpp
+	mat_creation(Mat & image);
+	```
+
+
+- 打印输出：
+
+	```cpp
+	std::cout<<......<<std::endl;
+	```
+- 图像宽度:
+
+	```cpp
+	m3.width;
+	```
+- 图像高度：
+
+	```cpp
+	m3.height;
+	```
+
+- 图像通道数：此时要加括号
+
+	```cpp
+	m3.channels();
+	```
+
+- 打印一个通道：
+
+	```cpp
+	Mat m3 = Mat::zeros(Size(8, 8), CV_8UC1);//CV_8UC1表示8位，U表示无符号，1表示一个通道
+	```
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/3b65ac9507384f86b69c6e97c5b0da91.png)
+
+
+- 打印三个通道：将其改为`CV_8UC3`即可
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/8eb55ba1c2a64f58b7c71525d54f0c71.png)
+
+- 第一个通道赋值为127：
+	```cpp
+	m3 = 127;//设置一个第一个通道为127
+	```
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/cca04bc2fcbc435ea5f4d975936789dc.png)
+
+- 使用`scalar()`函数将三个通道都赋值：此时显示红色，因为通道数显示顺序为B、G、R
+
+
+	```cpp
+	namedWindow("通道检验", WINDOW_FREERATIO);
+	imshow("通道检验", m3);
+	```
+
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/cb3b371a1aa2409183207b41ed3ade09.png)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/e971768c177c4b59bfb470495cda6fd7.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_15,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
