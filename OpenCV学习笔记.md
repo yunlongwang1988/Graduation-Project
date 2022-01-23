@@ -378,4 +378,367 @@ int main(int argc, char** argv)
 
 
 
+# Lesson 5 :图像像素的读写操作
+
+## 文件创建
+- 在头文件中新定义一个全局方法：
+
+	```cpp
+	void pixel_visit_demo(Mat & image);
+	```
+- 在`quickdemo.cpp`中编写该方法
+
+	```cpp
+	void quickdemo::pixel_visit_demo(Mat & image)
+	{
+	
+	}
+	```
+- 在`main.cpp`中创建一个实例化的类，引用该方法
+
+	```cpp
+	quickdemo qk3;
+	qk3.pixel_visit_demo(Mat & image);
+	```
+
+
+
+## 基本知识
+- 可以调整的窗口
+	```cpp
+	namedWindow("使用数组修改像素值", WINDOW_FREERATIO);
+	```
+
+- 获取图像像素的宽
+
+	```cpp
+	int w = image.cols;
+	```
+
+- 获取图像像素的高
+
+	```cpp
+	int h = image.rows;
+	```
+
+- 获取图像的通道数
+
+	```cpp
+	int c = image.channels();
+	```
+- 灰度图像通道数为1，像素的数据类型为`uchar`，将其转化成`int`类型
+	```cpp
+	int pv = image.at<uchar>(row,col);
+	```
+
+- 彩色图像通道数为3，像素的数据类型为`Vec3b`
+
+	```cpp
+	Vec3b bgr = image.at<Vec3b>(row,col);
+	```
+
+
+
+## 数组遍历
+- 假如为灰度图像，通道数为1，则获取像素值后直接修改即可
+	```cpp
+	int pv = image.at<uchar>(row,col);
+	image.at<uchar>(row,col) = 255 - pv;
+	```
+
+
+- 假如图像为彩色图像，要用数组对每个通道的值进行修改
+	```cpp
+	Vec3b bgr = image.at<Vec3b>(row,col);
+	image.at<Vec3b>(row,col)[0] = 255 - bgr[0];
+	image.at<Vec3b>(row,col)[1] = 255 - bgr[1];
+	image.at<Vec3b>(row,col)[2] = 255 - bgr[2];
+	```
+- 头文件
+	```cpp
+	void pixel_visit_demo_array(Mat & image);//Lesson 5：像素读写操作(使用数组)
+	```
+- `quickdemo.cpp`
+	```cpp
+	//Lesson 5:像素读写操作（使用数组）
+	void quickdemo::pixel_visit_demo_array(Mat & image)
+	{
+		int w = image.cols;//获取图像的宽
+		int h = image.rows;//获取图像的高
+		int c = image.channels();//获取图像的通道数
+		imshow("原始图片", image);//显示原始图片
+		for (int row = 0; row < h; row++)
+		{
+			for (int col = 0; col < w; col++)
+			{
+				if (c == 1)//通道数为1,灰度图像
+				{
+					int pv = image.at<uchar>(row, col);//获取像素点的值并转化为int类型
+					image.at<uchar>(row, col) = 255 - pv;//对单通道的像素值进行修改
+				}
+				if (c == 3)//彩色图像，通道数为3
+				{
+					Vec3b bgr = image.at<Vec3b>(row, col);//bgr是一个数组
+					image.at<Vec3b>(row, col)[0] = 255 - bgr[0];
+					image.at<Vec3b>(row, col)[1] = 255 - bgr[1];
+					image.at<Vec3b>(row, col)[2] = 255 - bgr[2];
+				}
+			}
+		}
+		imshow("使用数组修改像素值", image);//显示用数组修改后的图片
+	}
+	```
+
+- `main.cpp`
+
+	```cpp
+	//Lesson 5:图像像素的操作（指针或者数组）
+		quickdemo qk3;//将类实例化
+		qk3.pixel_visit_demo_array(src);//引用方法并传入读取的照片
+	```
+
+
+- 原图：
+		![在这里插入图片描述](https://img-blog.csdnimg.cn/176d1d4c87964e44b6718442c22cf4ba.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+- 数组遍历修改
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/b30152b9ebef460b922150c1e43286ce.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
+## 指针方式遍历
+
+
+- 定义一个指针`uchar`类型，先遍历行再遍历列，挨个移动
+
+- 头文件中定义新的方法
+
+	```cpp
+	void pixel_visit_demo_pointer(Mat & image);//Lesson 5:像素读写操作(使用指针)
+	```
+
+- `quickdemo.cpp`中编写该方法
+	
+	```cpp
+	//Lesson 5:像素读写操作（使用指针）
+	void quickdemo::pixel_visit_demo_pointer(Mat & image)
+	{
+		int w = image.cols;
+		int h = image.rows;
+		int c = image.channels();
+		for (int row = 0; row < h; row++)
+		{
+			uchar* current_row = image.ptr<uchar>(row);//定义一个指针，uchar类型
+			for (int col = 0; col < w; col++)
+			{
+				if (c == 1)//灰度图像
+				{
+					int pv = *current_row;
+					*current_row++ = 255 - pv;//挨个往下移动
+				}
+				if (c == 3)//彩色图像
+				{
+					*current_row++ = 255 - *current_row;
+					*current_row++ = 255 - *current_row;
+					*current_row++ = 255 - *current_row;
+				}
+			}
+		}
+	}
+	```
+
+- `main.cpp`中引用
+	```cpp
+	//Lesson 5:图像像素的操作（指针或者数组）
+		quickdemo qk3;//将类实例化
+		qk3.pixel_visit_demo_array(src);//引用方法并传入读取的照片
+	```
+
+
+
+
+# Lesson 6:图像像素的算术操作
+
+
+## 注意
+- 对两张图片进行算术运算要保证大小和类型相同
+
+	```cpp
+	Mat dst;
+	Mat m = Mat::zeros(image.size(), image.type());
+	```
+- `saturate_cast<数据类型>(判断内容)`：用来判断有没有溢出，超过则为范围的最大值，类似饱和函数
+
+
+## 加法
+- 简单的加法-----使用标量函数
+
+	```cpp
+	Mat dst;
+	dst = image + Scalar(50, 50, 50);
+	imshow("原图", image);
+	imshow("简单加法",dst);
+	```
+
+
+- 使用加法函数`add`
+
+ 	- `add(输入1，输入2，输出)`
+
+
+
+		```cpp
+		//加法，使用add函数
+		Mat dst;
+		Mat m = Mat::zeros(image.size(), image.type());
+		m = Scalar(20, 200, 200);
+		add(image, m, dst);
+		imshow("原图", image);
+		imshow("乘法",dst);
+		```
+
+
+	- 原图
+		![在这里插入图片描述](https://img-blog.csdnimg.cn/d4a036125b5f45cb838aa7157678857a.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
+
+	- 加后的图
+		![在这里插入图片描述](https://img-blog.csdnimg.cn/e0137487ec0a4073bb9757516caa75bd.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
+
+
+
+- **加法原理**
+
+	- 像素值分通道相加
+
+		```cpp
+		//加法原理
+		Mat dst = Mat::zeros(image.size(), image.type());//输出图像
+		Mat m = Mat::zeros(image.size(), image.type());
+		m = Scalar(200, 200, 200);
+		int w = image.cols;
+		int h = image.rows;
+		int c = image.channels();
+		for (int row = 0; row < h; row++)
+		{
+			for (int col = 0; col < w; col++)
+			{
+				Vec3b p1 = image.at<Vec3b>(row, col);//读取输入1的像素值
+				Vec3b p2 = m.at<Vec3b>(row, col);//读取m的像素值
+				dst.at<Vec3b>(row, col)[0] = saturate_cast<uchar>(p1[0] + p2[0]);
+				dst.at<Vec3b>(row, col)[1] = saturate_cast<uchar>(p1[1] + p2[1]);
+				dst.at<Vec3b>(row, col)[2] = saturate_cast<uchar>(p1[2] + p2[2]);
+			}
+		}
+		imshow("原图", image);
+		imshow("加法原理",dst);
+		```
+
+	 - 效果		![在这里插入图片描述](https://img-blog.csdnimg.cn/d4a036125b5f45cb838aa7157678857a.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+		![在这里插入图片描述](https://img-blog.csdnimg.cn/8fd9d4904d9e4f18806355d34cbcb2ea.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
+
+
+## 减法
+
+- 简单的减法----使用标量函数
+
+	```cpp
+	//减法，使用标量函数
+	Mat dst;
+	Mat m = Mat::zeros(image.size(), image.type());
+	m = Scalar(100, 100, 100);
+	dst = image - m;
+	imshow("原图", image);
+	imshow("乘法",dst);
+	```
+
+
+- 使用`subtract`函数
+
+	 - `subtract(输入1，输入2，输出)`
+
+		```cpp
+			//减法，使用库函数
+			Mat dst;
+			Mat m = Mat::zeros(image.size(), image.type());
+			m = Scalar(100, 100, 100);
+			subtract(image, m, dst);
+			imshow("原图", image);
+			imshow("乘法",dst);
+		```
+
+
+
+	- 原图		![在这里插入图片描述](https://img-blog.csdnimg.cn/7a7356df1a6e4f348e0e068c24caf3d6.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+	- 减后的图
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/a620ad09a106402eae31ece63241e628.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
+## 乘法
+- 简单的乘法(容易报错)----使用标量函数：要注意`A(m,n)`必须要乘以`B(n,m)`
+- 使用`multiply`函数
+
+	```cpp
+	Mat dst;//创建一个图像
+	Mat m = Mat::zeros(image.size(),image.type());//像素初值赋为0
+	m = Scalar(2,2,2);//使用标量函数赋值为2
+	multiply(image,m,dst);//输入的image和m相乘输出到dst中
+	```
+- 原图
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/7a7356df1a6e4f348e0e068c24caf3d6.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+- 乘后的图
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/aa26676ca818424b8415362fd09cc24a.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+## 除法
+
+- 简单的除法----使用标量函数
+
+	```cpp
+	//除法，使用标量函数
+	Mat dst;
+	Mat m = Mat::zeros(image.size(), image.type());
+	m = Scalar(20, 200, 2);
+	dst = image/m;
+	imshow("原图", image);
+	imshow("乘法",dst);
+	```
+
+
+- 使用`divide`函数
+	- `divide(输入1，输入2，输出)`
+
+
+		```cpp
+		//除法，使用divide函数
+		Mat dst;
+		Mat m = Mat::zeros(image.size(), image.type());
+		m = Scalar(20, 200, 2);
+		divide(image, m, dst);
+		imshow("原图", image);
+		imshow("乘法",dst);
+		```
+
+
+	- 原图
+		![在这里插入图片描述](https://img-blog.csdnimg.cn/7a7356df1a6e4f348e0e068c24caf3d6.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+	- 除后的图
+![在这里插入图片描述](https://img-blog.csdnimg.cn/eeb4345857994e77a595fe36cdac0485.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
 
