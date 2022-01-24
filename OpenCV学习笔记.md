@@ -741,4 +741,264 @@ int main(int argc, char** argv)
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/eeb4345857994e77a595fe36cdac0485.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
 
 
+# Lesson 7:一个调节亮度的滚动条
+
+## 头文件
+
+```cpp
+void tracking_bar_demo(Mat & image);//Lesson 7:调节亮度的滚动条
+```
+
+## quickdemo.cpp
+
+- 需要注意的是这里的变量是全局的
+
+
+
+
+	```cpp
+	Mat src, dst, m;
+	int lightness = 50;
+	static void on_track(int , void*)
+	{
+		m = Scalar(lightness, lightness, lightness);
+		add(src, m, dst);
+		imshow("亮度调整",dst);
+	}
+	void quickdemo::tracking_bar_demo(Mat & image)
+	{
+	
+		namedWindow("调整亮度",WINDOW_AUTOSIZE);
+		dst = Mat::zeros(image.size(), image.type());
+		m = Mat::zeros(image.size(), image.type());
+		src = image;
+		int max_value = 100;
+	
+		createTrackbar("Value Bar", "调整亮度", &lightness, max_value, on_track);
+	}
+	```
+
+
+## main.cpp中创建实例并调用
+
+
+
+
+```cpp
+//Lesson 7:滚动条调整亮度
+	quickdemo qk5;
+	qk5.tracking_bar_demo(src);
+```
+
+## 效果
+
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/00082f8d16144ab9b86a89761066ebc7.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/1061b45542194a59b41408a2a8fce299.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+# Lesson 8:传递参数创建滚动条
+
+```cpp
+static void on_lightness(int b, void* userdata)
+{
+	Mat image = *((Mat*)userdata);
+	Mat dst = Mat::zeros(image.size(), image.type());
+	Mat m = Mat::zeros(image.size(), image.type());
+	addWeighted(image, 1.0, m, 0, b, dst);
+	imshow("亮度与对比度",dst);
+}
+static void on_contrast(int b, void* userdata)
+{
+	Mat image = *((Mat*)userdata);
+	Mat dst = Mat::zeros(image.size(), image.type());
+	Mat m = Mat::zeros(image.size(), image.type());
+	double contrast = b / 100.0;
+	addWeighted(image,contrast,m,0.0,b,dst);
+	imshow("亮度与对比度", dst);
+}
+void quickdemo::tracking_bar_demo(Mat & image)
+{
+
+	namedWindow("调整亮度",WINDOW_AUTOSIZE);
+	int lightness = 50;
+	int max_value = 100;
+	int contrast_value = 100;
+	createTrackbar("Value Bar", "调整亮度与对比度", &lightness, max_value, on_lightness,(&image));
+	createTrackbar("Contrast Bar", "调整亮度与对比度", &contrast_value, 200, on_contrast,(&image));
+	on_lightness(50, &image);
+}
+```
+
+
+
+# Lesson 8：键盘响应
+
+## 原理说明
+- 按1输出灰度值
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/2bb82caa1c344863a0f8a44733badf6f.png)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/b802c09a25324c3c8952d47d89ab5be0.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
+
+- 按2输出HSV图像
+	
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/2febdf03c8c9417c9d789171322aee68.png)
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/72e073c7f83e4d2b97fe7cccbee0c81a.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+- 按3像素相加
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/d87578ba565940f1937a0697e04fb13f.png)
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/bc76d79dc2564c788a20f7342dcdb277.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+- 按`ESC`退出
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/b1ea7fbfefa54e3b84468dddbdf535d4.png)
+
+## 代码
+
+- 等待键盘输入：`waitKey(时间)`，以`ms`为单位
+- 输入转化为`ASCII`码保存
+- 通过判断数字及字母对应的`ASCII`码来执行相应的程序
+
+
+```cpp
+void quickdemo::key_demo(Mat & image)
+{
+	Mat dst = Mat::zeros(image.size(), image.type());
+	imshow("原图",image);
+	while (true)
+	{
+		int c = waitKey(100);//等待键盘输入转化成ASCII码
+		if (c == 27)
+		{
+			std::cout << "退出循环" << std::endl;
+			break;//ESC键，退出循环
+		}
+		if (c == 49)//对应键盘值1
+		{
+			std::cout << "输入的是1" << std::endl;
+			cvtColor(image, dst, COLOR_BGR2GRAY);//转为灰度图像
+		}
+		if (c == 50)//对应键盘值2
+		{
+			std::cout << "输入的是2" << std::endl;
+			cvtColor(image, dst, COLOR_BGR2HSV);//转为HSV图像
+		}
+		if (c == 51)//对应键盘值3
+		{
+			std::cout << "输入的是3" << std::endl;
+			dst = Scalar(50,50,50);
+			add(image, dst,dst);//图片相加
+		}
+		imshow("键盘显示", dst);
+	}
+```
+
+
+# Lesson 9：颜色表
+
+
+
+## 颜色表数组：
+
+
+
+```cpp
+int colormap[] = 
+{
+		COLORMAP_AUTUMN,
+		COLORMAP_BONE,
+		COLORMAP_JET,
+		COLORMAP_WINTER,
+		COLORMAP_RAINBOW,
+		COLORMAP_OCEAN,
+		COLORMAP_SUMMER,
+		COLORMAP_SPRING,
+		COLORMAP_COOL,
+		COLORMAP_PINK,
+		COLORMAP_HOT,
+		COLORMAP_PARULA,
+		COLORMAP_MAGMA,
+		COLORMAP_INFERNO,
+		COLORMAP_PLASMA,
+		COLORMAP_VIRIDIS,
+		COLORMAP_CIVIDIS,
+		COLORMAP_TWILIGHT,
+		COLORMAP_TWILIGHT_SHIFTED
+};
+```
+
+
+## quickdemo.cpp
+
+
+- index++不断进行转换
+
+
+	```cpp
+	applyColorMap(image, dst, colormap[index]);	
+	index++;
+	```
+
+
+- 但色彩数组里面只有18个数据，index不能一直加，与19**取模**可以将其限制在0-18
+
+
+	```cpp
+	applyColorMap(image, dst, colormap[index%19]);
+	```
+
+```cpp
+void quickdemo::color_table(Mat & image)
+{
+	int colormap[] = {
+		COLORMAP_AUTUMN,
+		COLORMAP_BONE,
+		COLORMAP_JET,
+		COLORMAP_WINTER,
+		COLORMAP_RAINBOW,
+		COLORMAP_OCEAN,
+		COLORMAP_SUMMER,
+		COLORMAP_SPRING,
+		COLORMAP_COOL,
+		COLORMAP_PINK,
+		COLORMAP_HOT,
+		COLORMAP_PARULA,
+		COLORMAP_MAGMA,
+		COLORMAP_INFERNO,
+		COLORMAP_PLASMA,
+		COLORMAP_VIRIDIS,
+		COLORMAP_CIVIDIS,
+		COLORMAP_TWILIGHT,
+		COLORMAP_TWILIGHT_SHIFTED
+	};
+	Mat dst;
+	int index = 0;
+	while (true)
+	{
+		int c = waitKey(200);//等待输入
+		if (c == 27)
+		{
+			break;//ESC退出
+		}
+		applyColorMap(image, dst, colormap[index]);
+		index++;
+		imshow("不断色彩转换", dst);
+	}
+}
+```
+
+
+## 效果：色彩不断变换
+![在这里插入图片描述](https://img-blog.csdnimg.cn/14f1efa089df47e1b58b50b8afa5b128.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/38fae63aebb74ff691563573198c0f33.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/7ad902ba373348d3a5d81af88d4399d1.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/72baade4af83440c97f36741191e83c5.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
 
