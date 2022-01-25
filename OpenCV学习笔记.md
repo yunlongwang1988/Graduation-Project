@@ -1001,4 +1001,709 @@ void quickdemo::color_table(Mat & image)
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/38fae63aebb74ff691563573198c0f33.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/7ad902ba373348d3a5d81af88d4399d1.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/72baade4af83440c97f36741191e83c5.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+# Lesson 10:位操作
+
+
+## 创建两幅图像并画矩形
+
+```cpp
+Mat m1 = Mat::zeros(Size(256, 256), CV_8UC3);
+Mat m2 = Mat::zeros(Size(256, 256), CV_8UC3);
+rectangle(m1, Rect(100, 100,80,80), Scalar(255, 255, 0), -1, LINE_8, 0);
+rectangle(m2, Rect(150, 150, 80, 80), Scalar(0, 255, 255), -1, LINE_8, 0);
+```
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/c71594cb2f144492935c5cb762875465.png#pic_center)
+
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/e6707d7fa8404f3597cf848c825897e6.png#pic_center)
+## 位操作
+
+- `bitwise_and(输入1，输入2，输出)`
+
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/740bbaed180c445db2d310ae2b6a85f7.png#pic_center)
+
+- `bitwise_or(输入1，输入2，输出)`
+
+
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/cc7de0dc255d4ccc9565e69cf8265c0a.png#pic_center)
+
+- `bitwise_not(输入，输出)`
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/00082f8d16144ab9b86a89761066ebc7.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/3a42cf1061bd42c0b7f839823f783190.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+- `bitwise_xor(输入1，输入2，输出)`
+
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/178b86d09afa4f1382f60d231d9e517c.png#pic_center)
+# Lesson 11:通道分离与混合
+
+
+# split通道分离
+- 原理
+
+
+
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/a4c841b02fc1419db2478ac05e0a169f.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_10,color_FFFFFF,t_70,g_se,x_16#pic_center)
+
+- 创建一个容器
+
+
+	
+	```cpp
+	std::vector<Mat>mv;//创建一个容器
+	```
+
+
+	```cpp
+	void quickdemo::channels_demo(Mat & image)
+	{
+			//split通道分离
+		std::vector<Mat>mv;//创建一个容器
+		split(image, mv);//分离通道
+		imshow("通道分离0", mv[0]);
+		imshow("通道分离1", mv[1]);
+		imshow("通道分离2", mv[2]);
+	}
+	```
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/d8e1016597ae46c0a72d9642fd845102.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/0e4ad39194124e8a812c4a822f3bfa72.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/6bbec872731643ae852bfb7eaf451745.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+## merge通道合并
+
+
+```cpp
+		//merge通道合并
+Mat dst;
+mv[0] = 128;
+mv[1] = 50;
+merge(mv,dst);
+imshow("通道合并",dst);
+```
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/b040430df18e449abe91a2f26de432f6.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+## 通道混合
+- `mixchannels(输入，个数，输出，个数，从哪到哪，通道数)`
+
+- 定义通道流向：1到2，1到1等...
+
+
+	```cpp
+	int from_to[] = {0,2,1,1,2,0};
+	```
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/fd23757c20b045d29e69ad56b582a920.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+# Lesson 12:图像色彩空间转化
+
+- 原图
+
+
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/e94e2b0805a54402b38f5b121001fdf1.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+-  色彩空间转换：BGR----HSV
+
+	```cpp
+	//色彩空间转换
+	Mat hsv;
+	cvtColor(image, hsv, COLOR_BGR2HSV);
+	```
+	
+- 提取轮廓
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/4686fdfab4234df29deb989e96276854.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/618a1956d14842f3948aea4e74627e80.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_10,color_FFFFFF,t_70,g_se,x_16#pic_center)
+
+
+	```cpp
+	//过滤
+	Mat masker;
+	inRange(hsv, Scalar(35, 43, 46), Scalar(77, 255, 255), masker);//过滤掉HSV图像中的某个通道，最大值最小值
+	imshow("makser",masker);
+	```
+	
+	
+
+- 将提取的轮廓像素取反
+
+	```cpp
+	bitwise_not(masker,masker);//对提取的轮廓取反
+	```
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/d7fc05c9806d44a5b1a6a03d4c5ef8c1.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+- 粘贴到红色背景的图上
+
+	```cpp
+	image.copyTo(redback, masker);
+	```
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/88ce638311794c2ea61897fb5f712de3.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+# Lesson 13:图像像素值统计
+
+## 单个通道的最大值和最小值
+- 定义最大值最小值：`double`类型
+- 定义最大值最小值位置：`Point`类型
+- 分离通道
+- 循环检测每个通道的最大值和最小值
+```cpp
+double mixv, maxv;//定义像素的最大值和最小值
+Point minLoc, maxLoc;//定义像素的最大最小值位置
+std::vector<Mat>mv;//定义一个容器，分离通道，因为只有单通道才能统计
+split(image, mv);
+for (int i = 0; i < mv.size(); i++)
+{
+	minMaxLoc(mv[i], &mixv, &maxv, &minLoc, &maxLoc, Mat());
+	std::cout << "通道：" << i <<std:: endl;
+	std::cout << "mixv:" << mixv << "maxv:" << maxv << std::endl;
+}
+```
+
+
+## 均值和方差(deviation)
+
+- 均值和方差是矩阵类型
+- `menaStdDev(输入图像，均值，方差)`
+
+	```cpp
+	Mat mean, stddev;//定义均值和方差
+	meanStdDev(image,mean,stddev);
+	```
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/86f41add540d44a0bce34679848e6a58.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_15,color_FFFFFF,t_70,g_se,x_16)
+
+# Lesson 14:图像几何形状绘制
+- 像素坐标系在一张图像的左上角位置
+
+
+
+## 矩形
+- 矩形变量：`Rect r`
+- 矩形的位置：`r.x`    `r.y`
+- 矩形的大小：`r.width`   `r.height`
+- 绘制矩形的命令：`rectangle(输入图像，矩形参数，矩形的颜色Scalar()，线条粗细（-1表示填充），8，0)`
+	```cpp
+	//绘制矩形
+	Rect r;
+	r.x = 100;
+	r.y = 150;
+	r.width = 100;
+	r.height = 100;
+	Mat dst = Mat::zeros(image.size(),image.type());
+	rectangle(image,r,Scalar(255,0,255),2,8,0);
+	```
+## 绘制圆
+- 绘制圆：`circle(输入图像，圆心：Point(x,y)，半径，颜色，线条粗细（-1表示填充），8（LINE_AA表示反锯齿），0)`
+	```cpp
+	//绘制圆
+	circle(image, Point(200, 25), 50, Scalar(0, 255, 200), 2, 8, 0);
+	```
+
+## 绘制直线
+
+- 绘制直线：`line(输入图像，Point(起始点)，Point(终点)，Scalar()，线条粗细（-1表示填充），8（LINE_AA表示反锯齿），0)`
+
+
+	```cpp
+	//绘制直线
+	line(image, Point(20, 50), Point(100, 200), Scalar(30, 25, 60), 2, 8, 0);
+	```
+
+## 绘制椭圆
+
+- 椭圆变量：`RotatedRect e`
+-  椭圆位置：`e.center = Point(x,y)`
+- 椭圆大小：`e.size = Size(m,n)`
+- 椭圆角度：`e.angle = 90`
+- 绘制椭圆命令：`ellipse(输入图像，椭圆参数，Scalar()，线条粗细（-1表示填充），8（LINE_AA表示反锯齿），0)`
+
+	```cpp
+	//绘制椭圆
+	RotatedRect e;
+	e.center = Point(60,50);
+	e.size = Size(20, 60);
+	e.angle = 90;
+	ellipse(image, e, Scalar(46, 97, 255), 2, 8);
+	```
+
+
+
+## 图像合并
+- 图像合并：`addWeighted(输入1，权重1，输入2，权重2，0，输出)`
+
+
+	```cpp
+	//合并两张图像
+	Mat dst2;
+	addWeighted(image, 0.7, dst, 0.3, 0, dst2);
+	imshow("几何图形",dst2);
+	```
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/c47db9b20fda475a9b4339faddf51c65.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+	
+
+
+# Lesson 15:随机绘图演示
+
+## 流程
+
+- 创建一张三通道的空白图像
+
+	```cpp
+	Mat canvas = Mat::zeros(Size(512, 512), CV_8UC3);
+	```
+
+- 求取该图像的长宽
+
+	```cpp
+	int w = canvas.cols;
+	int h = canvas.rows;
+	```
+
+- 定义随机变量
+
+	```cpp
+	RNG rng(12345);
+	```
+
+- 获取随机点
+
+	```cpp
+	int x1 = rng.uniform(0, w);
+	int y1 = rng.uniform(0, h);
+	int x2 = rng.uniform(0, w);
+	int y2 = rng.uniform(0, h);
+	```
+
+
+- 获取随机颜色
+
+	```cpp
+	int b = rng.uniform(0, 255);
+	int g = rng.uniform(0, 255);
+	int r = rng.uniform(0, 255);
+	```
+
+
+- 绘制直线
+
+	```cpp
+	line(canvas, Point(x1, y1), Point(x2, y2), Scalar(b, g, r), 1, LINE_AA, 0);
+	```
+
+
+
+
+
+## 完整代码
+
+```cpp
+void quickdemo::randow_demo()
+{
+	Mat canvas = Mat::zeros(Size(512, 512), CV_8UC3);
+	int w = canvas.cols;
+	int h = canvas.rows;
+	RNG rng(12345);
+	while (true)
+	{
+		int c = waitKey(10);
+		if (c == 27)
+		{
+			break;
+		}
+		int x1 = rng.uniform(0, w);
+		int y1 = rng.uniform(0, h);
+		int x2 = rng.uniform(0, w);
+		int y2 = rng.uniform(0, h);
+		int b = rng.uniform(0, 255);
+		int g = rng.uniform(0, 255);
+		int r = rng.uniform(0, 255);
+		line(canvas, Point(x1, y1), Point(x2, y2), Scalar(b, g, r), 1, LINE_AA, 0);
+		imshow("随机绘图演示",canvas);
+	}
+}
+```
+
+
+
+## 效果
+
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/0242b3bf88944cafbdb58cf52676fb2c.gif)
+# Lesson 16:多边形的绘制与填充
+
+
+
+## 准备知识
+- 创建一个空白画布
+
+
+
+	```cpp
+	Mat canvas = Mat::zeros(Size(512,512),CV_8UC3);
+	```
+
+- 绘制多边形首先需要创建点
+
+	```cpp
+	Point p1(100, 100);
+	Point p2(350, 100);
+	Point p3(450, 280);
+	Point p4(320, 450);
+	Point p5(80, 400);
+	```
+
+
+- 创建向量保存这些点
+
+	```cpp
+	std::vector<Point>pts;
+	pts.push_back(p1);
+	pts.push_back(p2);
+	pts.push_back(p3);
+	pts.push_back(p4);
+	pts.push_back(p5);
+	```
+
+- 多边形绘制命令
+
+	```cpp
+	polylines(canvas, pts, true, Scalar(0, 0, 255), 2, 8, 0);
+	```
+
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/0e4bd963adb84e60998971311b1fcdc5.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_15,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+- 绘制多边形要使用单独的填充函数，不能简单将参数改为-1
+
+
+	```cpp
+	fillPoly(canvas,pts,Scalar(255,0,255),8,0);
+	```
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/7428eadbea9b44afa4517b1db6ad7313.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_15,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
+
+- 还有一个绘制多边形的命令：`drawContours()`，要先创建一个点集
+
+	```cpp
+	std::vector<std::vector<Point>>contours;//也是创建一个点集
+	contours.push_back(pts);
+	drawContours(canvas, contours, -1, Scalar(255, 0, 255), 2);
+	```
+
+
+
+
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/0daba8f3321248f3967260b67a3ad044.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_15,color_FFFFFF,t_70,g_se,x_16)
+
+
+# Lesson 17：鼠标操作与响应
+
+# Lesson 18：图像像素类型转化与归一化
+## 四种归一化方法
+ - `NORM_MINMAX`
+ - `NORM_INF`
+ - `NORM_L1`
+ - `NORM_L2`
+
+最常用的是`MINMAX`方法
+
+
+## 流程
+- 没有转化之前的数据类型
+
+	```cpp
+	Mat dst;
+	std::cout << "原始像素类型：" << image.type() << std::endl;
+	```
+
+- 转化之后的像素类型
+
+	```cpp
+	std::cout << "转化之后像素类型：" << image.type() << std::endl;
+	```
+
+- 像素归一化之前要转化成浮点类型
+
+	```cpp
+	image.convertTo(image, CV_32F);
+	```
+
+
+- 归一化后的像素类型
+
+
+	```cpp
+	normalize(image, dst, 1, 0, NORM_MINMAX);
+	std::cout << "归一化后的像素类型：" << dst.type() << std::endl;
+	```
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/26ecf3b7464340bdb12082c22590ae2d.png)
+# Lesson 19:图像放缩与插值
+## 四种插值方法
+
+- `INTER_NEAREST`
+- `INTER_LINEAR`
+- `INTER_CUBIC`
+- `INTER_LANCZOS4`
+
+
+## 图像放缩
+- 创建图像
+	```cpp
+	Mat large, small;
+	```
+
+- 获取图像尺寸
+
+	```cpp
+	int w = image.cols;
+	int h = image.rows;
+	```
+
+
+- 放大缩小：`resize()`
+
+	```cpp
+	resize(image, large, Size(w*1.5, h*1.5), 0, 0, INTER_LINEAR);//放大
+	imshow("放大",large);
+	resize(image, small, Size(w/1.5, h/1.5), 0, 0, INTER_LINEAR);//缩小
+	imshow("缩小", small);
+	```
+
+
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/74815473798046b296bc7af2534a0734.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+# Lesson 20:图像翻转
+- flip(输入，输出，0)：上下翻转
+
+	```cpp
+	flip(image, dst, 0);//上下翻转
+	imshow("上下翻转",dst);
+	```
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/b0173c2912cd4dbe9671eb3ed0131598.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
+
+- flip(输入，输出，1)：左右翻转
+
+	```cpp
+	flip(image, dst, 1);//左右翻转
+	imshow("左右翻转", dst);
+	```
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/e38ec732a86e482cad9de8426e206a8b.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
+- flip(输入，输出，-1)：对角线翻转
+
+	```cpp
+	flip(image, dst, -1);//对角线
+	imshow("对角线翻转", dst);
+	```
+
+
+
+
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/eb6b13a1ce05478cb096dc68a15345b4.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+# Lesson 21:图像旋转
+## 步骤\
+
+- 求出原图像的宽高
+
+
+
+
+
+- 求出翻转矩阵M
+
+	```cpp
+	M = getRotationMatrix2D(Point2f(w / 2, h / 2), 45, 1.0);//第一个参数位图像中心，第二个为旋转角度，第三个为缩放系数
+	```
+
+
+
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/8a0fedb7d3294178be30cd2758624082.png)
+
+
+
+- 求出旋转后图像的宽和高
+	
+	```cpp
+	double cos = abs(M.at<double>(0, 0));//M矩阵的一行一列元素
+	double sin = abs(M.at<double>(0, 1));//M矩阵的一行二列元素
+	double nw = cos * w + sin * h;//新图像的宽
+	double nh = sin * w + cos * h;//新图像的高
+	M.at<double>(0, 2) += (nw / 2 - w / 2);
+	M.at<double>(1, 2) += (nh / 2 - h / 2)
+	```
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/93de1a42150f457687b19bf155548ced.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_16,color_FFFFFF,t_70,g_se,x_16)
+- 旋转：旋转就是放射变换`affine`
+
+	```cpp
+	warpAffine(image, dst, M, Size(nw, nh), INTER_LINEAR, 0, Scalar(255, 0, 0));
+	```
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/a93d9564c2484cf2b9f1995beb22fe7e.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
+# Lesson 22:读取摄像头或者视频文件
+## 基本原理
+
+
+- 创建一个视频类型的变量：为0表示调用摄像头，里面加上绝对路径可以调用视频文件
+
+
+
+	```cpp
+	VideoCapture capture(0);//为0则表示调用摄像头
+	```
+
+- 创建一个图像变量：`VideoCapture capture()`
+
+
+	```cpp
+	Mat frame;
+	```
+- 循环读取图片：在里面设置一些退出机制（按键检测，没有读取到图片等）
+
+
+
+	
+	```cpp
+	while (true)
+	{
+		capture.read(frame);
+		if (frame.empty())//没有读取到图像，退出
+		{
+			break;
+		}
+		int c = waitKey(10);//等待键盘输入
+		if (c == 27)//如果有ESC键按下，则退出
+		{
+			break;
+		}
+		imshow("摄像头", frame);//循环显示图像
+	}
+	```
+
+
+
+- 释放摄像头资源：循环体外
+
+
+	```cpp
+	capture.release();//释放摄像头占用资源
+	```
+
+
+
+# Lesson 23:视频文件的保存
+
+## 步骤
+
+- 加载视频
+
+	```cpp
+	VideoCapture capture("F:/opencv_Envir/exercise/GitLab.mp4");//为0则表示调用摄像头
+	```
+
+- 获取视频的分辨率（宽，高，帧数，fps）
+	
+	```cpp
+	int w = capture.get(CAP_PROP_FRAME_WIDTH);
+	int h = capture.get(CAP_PROP_FRAME_HEIGHT);
+	int count = capture.get(CAP_PROP_FRAME_COUNT);
+	double fps = capture.get(CAP_PROP_FPS);
+	```
+
+- 输出以上信息
+
+	
+	```cpp
+	std::cout << "width:" << w << std::endl;
+	std::cout << "height:" << h << std::endl;
+	std::cout << "count:" << count << std::endl;
+	std::cout << "fps:" << fps << std::endl;
+	```
+
+
+- 创建保存视频变量：VideoWriter writer("路径"，视频编码信息，fps，Size(宽，高)，true)
+
+
+	```cpp
+	VideoWriter writer("F:/opencv_Envir/exercise/test.mp4", capture.get(CAP_PROP_FOURCC), fps, Size(w, h), true);
+	```
+- 视频编码信息自动获取：`capture.get(CAP_PROP_FOURCC)`
+
+- 读取视频文件
+
+	
+	```cpp
+	Mat frame;
+	while (true)
+	{
+		capture.read(frame);
+		if (frame.empty())//没有读取到图像，退出
+		{
+			break;
+		}
+		int c = waitKey(10);//等待键盘输入
+		if (c == 27)//如果有ESC键按下，则退出
+		{
+			break;
+		}
+		imshow("摄像头", frame);//循环显示图像
+	}
+	```
+
+- 释放资源
+
+	```cpp
+	capture.release();//释放摄像头占用资源
+	writer.release();
+	```
+
+
+## 效果
+
+
+
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/81c2f6463ce94f229e6af5e5d7db3a71.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/98b57f0bf0044821bf244ac6d521474e.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
 
