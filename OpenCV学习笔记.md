@@ -1707,3 +1707,197 @@ void quickdemo::randow_demo()
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/98b57f0bf0044821bf244ac6d521474e.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
 
+# Lesson 24:图像直方图
+
+## 步骤
+- 三通道分离
+
+	```cpp
+	std::vector<Mat>bgr_plane;
+	split(image, bgr_plane);
+	```
+
+- 定义参数变量
+
+	```cpp
+	const int channels[1] = { 0 };
+	const int bins[1] = { 256 };
+	float hranges[2] = { 0,255 };
+	const float* ranges[1] = {hranges};
+	```
+
+
+- 计算BGR三通道的直方图
+
+	```cpp
+	calcHist(&bgr_plane[0], 1, 0, Mat(), b_hist, 1, bins, ranges);
+	calcHist(&bgr_plane[1], 1, 0, Mat(), g_hist, 1, bins, ranges);
+	calcHist(&bgr_plane[2], 1, 0, Mat(), r_hist, 1, bins, ranges);
+	int hist_w = 512;
+	int hist_h = 400;
+	int bin_w = cvRound((double)hist_w/bins[0]);
+	Mat histImage = Mat::zeros(hist_h, hist_w, CV_8UC3);
+	```
+
+
+
+- 归一化直方图数据
+
+	```cpp
+	normalize(b_hist, b_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat());
+	normalize(g_hist, g_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat());
+	normalize(r_hist, r_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat());
+	```
+
+
+ - 显示直方图
+
+	```cpp
+	for (int i = 1; i < bins[0]; i++)
+	{
+	line(histImage, Point(bin_w*(i - 1), hist_h - cvRound(b_hist.at<float>(i - 1))),Point(bin_w*(i),hist_h-cvRound(b_hist.at<float>(i))),Scalar(255,0,0),2,8,0);
+	line(histImage, Point(bin_w*(i - 1), hist_h - cvRound(b_hist.at<float>(i - 1))), Point(bin_w*(i), hist_h - cvRound(g_hist.at<float>(i))), Scalar(0, 255, 0), 2, 8, 0);
+	line(histImage, Point(bin_w*(i - 1), hist_h - cvRound(b_hist.at<float>(i - 1))), Point(bin_w*(i), hist_h - cvRound(r_hist.at<float>(i))), Scalar(0, 0, 255), 2, 8, 0);
+	}
+	namedWindow("Hisogram", WINDOW_AUTOSIZE);
+	imshow("Hisogram",histImage);
+	```
+
+
+ ## 效果
+![在这里插入图片描述](https://img-blog.csdnimg.cn/244c970cdee54c1dacfa8f7626946622.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_15,color_FFFFFF,t_70,g_se,x_16)
+# Lesson 25:二维直方图
+
+
+## 步骤
+
+```cpp
+void quickdemo::histogram_2d_demo(Mat & image)
+{
+	Mat hsv, hs_hist;
+	cvtColor(image, hsv, COLOR_BGR2HSV);
+	int hbins = 30, sbins = 32;
+	int hist_bins[] = {hbins,sbins};
+	float h_range[] = { 0,180 };
+	float s_range[] = { 0,256 };
+	const float* hs_range[] = { h_range,s_range };
+	int hs_channels[] = { 0,1 };
+	calcHist(&hsv, 1, hs_channels, Mat(), hs_hist, 2, hist_bins, hs_range, true, false);
+	double maxVal = 0;
+	minMaxLoc(hs_hist, 0, &maxVal, 0, 0);
+	int scale = 10;
+	Mat hist2d_image = Mat::zeros(sbins*scale, hbins*scale, CV_8UC3);
+	for (int h = 0; h < hbins; h++)
+	{
+		
+		for (int s = 0; s < sbins; s++)
+		{
+			float binVal = hs_hist.at<float>(h, s);
+			int intensity = cvRound(binVal * 255 / maxVal);
+			rectangle(hist2d_image, Point(h*scale, s*scale), Point((h + 1)*scale - 1, (s + 1)*scale - 1), Scalar::all(intensity), -1);
+		}
+	}
+	applyColorMap(hist2d_image, hist2d_image, COLORMAP_JET);
+	imshow("H-S histogram",hist2d_image);
+}
+```
+
+## 效果
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/161efb873f8a4caa83b3d34af01854c8.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_8,color_FFFFFF,t_70,g_se,x_16)
+# Lesson 26:直方图均衡化
+
+
+## 灰度图像
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/3bacfbe450d14e058321e35f23701f68.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+## 直方图均衡化
+
+- `equalizeHist(gray, dst);`
+
+	```cpp
+	void quickdemo::equalize_demo(Mat & image)
+	{
+		Mat gray;
+		cvtColor(image, gray, COLOR_BGR2GRAY);
+		imshow("灰度图像", gray);
+		Mat dst;
+		equalizeHist(gray, dst);
+		imshow("直方图均衡化",dst);
+	}
+	```
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/f3bf199b4a6c4e8e87566ccb3f321624.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+# Lesson 27:图像卷积（blur）操作
+
+## 原理
+- 原图像选定一个矩阵，每次矩阵按行移动
+- 选定一个矩阵作为窗口
+- 原图像每个元素乘以窗口矩阵的元素相加处于窗口元素的个数作为卷积输出
+- 原图像矩阵挨个移动
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/be312e9fd8004a63a8e7f03986bafc83.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_13,color_FFFFFF,t_70,g_se,x_16)
+
+## 步骤
+- `Size()`表示窗口大小
+
+
+
+
+
+	```cpp
+	Mat dst;
+	blur(image, dst, Size(2, 2), Point(-1, -1));
+	imshow("图像模糊",dst);
+	```
+## 效果
+![在这里插入图片描述](https://img-blog.csdnimg.cn/41040dd3503c40f0985f017e28bcc3d7.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/b0b2ae8ca4ca4ae5ae545a606f7337e3.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+# Lesson 28:高斯模糊
+
+## 原理
+- 高斯模糊多了一个$\sigma$作为参数
+
+
+	```cpp
+	GaussianBlur(image, dst, Size(10, 10), 15);
+	```
+
+	![在这里插入图片描述](https://img-blog.csdnimg.cn/d6c4a8dd257d4ecd9368da87a00dc3ea.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+## 效果
+![在这里插入图片描述](https://img-blog.csdnimg.cn/ee04df9952464f2194c7cf7f93e058be.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/604e21cc2bfe421bbca2735b0600d17a.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+# Lesson 29:高斯双边模糊
+
+## 代码
+
+```cpp
+Mat dst;
+bilateralFilter(image, dst, 0,100,10);
+imshow("原图", image);
+imshow("高斯模糊", dst);
+```
+
+
+
+
+## 效果
+![在这里插入图片描述](https://img-blog.csdnimg.cn/05f3837086bc4103a79c2e8c7c50c34b.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/99033c9a0d2549e0b0a7a1af6e1d9652.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBATXIuWXVuTG9uZw==,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+
+
+
+
+
+
