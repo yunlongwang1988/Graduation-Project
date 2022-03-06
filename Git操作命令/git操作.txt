@@ -1,0 +1,3 @@
+添加本地文件：git add .
+添加到缓存区：git commit -m "说明"
+添加到Github：git push origin master

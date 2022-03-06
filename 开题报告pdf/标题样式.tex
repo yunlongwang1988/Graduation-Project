@@ -1,0 +1,97 @@
+\documentclass{article}
+\usepackage[heading=true]{ctex} %heading=true中文版式生效
+\usepackage{geometry}
+\geometry{a4paper,left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}%调整页边距
+\usepackage{amsmath}
+\usepackage{fancybox}
+\usepackage{titlesec}%设置标题字号格
+\usepackage{graphicx}
+\graphicspath{{图片/}}
+\usepackage{booktabs}
+\usepackage{amsthm}
+\usepackage{lipsum}
+\usepackage{float}
+\usepackage{fontspec}
+\usepackage[dvipsnames,svgnames]{xcolor}
+\usepackage[strict]{changepage} % 提供一个 adjustwidth 环境
+\usepackage{cases}
+\usepackage{tcolorbox}
+\usepackage{framed} % 实现方框效果
+\usepackage{newtxtext}
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{caption}
+\usepackage{subfigure}
+
+
+%%%%%带底纹的文本
+\definecolor{formalshade}{rgb}{0.95,0.95,1} % 文本框颜色
+%% 注意行末需要把空格注释掉，不然画出来的方框会有空白竖线
+\newenvironment{formal}{%
+	\def\FrameCommand{%
+		\hspace{1pt}%
+		{\color{DarkBlue}\vrule width 2pt}%
+		{\color{formalshade}\vrule width 4pt}%
+		\colorbox{formalshade}%
+	}%
+	\MakeFramed{\advance\hsize-\width\FrameRestore}%
+	\noindent\hspace{-4.55pt}% disable indenting first paragraph
+	\begin{adjustwidth}{}{7pt}%
+		\vspace{2pt}\vspace{2pt}%
+	}	{%
+		\vspace{2pt}\end{adjustwidth}\endMakeFramed%
+}
+%%%%%带底纹的文本
+
+\title{\songti\zihao{3}毕业设计(论文)开题报告}
+\author{王云龙}
+\date{\today}
+
+\renewcommand\thesection{\chinese{section}}
+\renewcommand\thesubsection{\arabic{subsection}}
+\renewcommand\thesubsubsection{\arabic{subsection}}	
+
+\titleformat{\section}[block]{\raggedright\large\bfseries}{\thesection\,、}{1em}{}
+
+\titleformat{\subsection}[block]{\raggedright\large\bfseries}{\arabic{section}.\arabic{subsection}}{1em}{}
+
+\titleformat{\subsubsection}[block]{\raggedright\large\bfseries}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}{1em}{}
+
+\begin{document}
+	\maketitle
+	\fancypage{\fbox}{}
+	\section{课题来源}
+	
+回流上古，追溯原始，从三百万年前非洲大陆的石器，到四千年前美索不达米亚的青铜，再到
+一千四百年前小亚细亚的铁器，人类科技一直以一种小步慢跑的方式发展，直到十八世纪六十年代，
+英格兰地区蒸汽动力的出现，标志着第一次工业革命的开始，它带领人类从农业文明进入到工业文
+明，封建经济被资本主义经济取代，完成第一次工业革命的资本主义国家迅速开始全球扩张进行资
+本积累，十九世纪七十年代，标志着以电气为代表的第二次工业革命的开始，资本主义飞速发展，世
+界经济格局、资本主义世界市场形成，促进了工人运动和社会主义运动，第二次世界大战后，世界出
+现新格局，以美国为首的北约和以苏联为首的华约之间的冷战，诞生了超乎人类想象力的科技，如
+通用电器公司的Hardiman-动力装甲，SR-71 黑鸟式侦察机，XB-70 女武神式战略轰炸机，阿波罗计
+划，地效飞行器，核潜艇等。
+
+
+纵观人类科技发展历史，从最初的小步慢跑到井喷式发展，每一个扩展人类想象力科技的背后
+都离不开工业机器的自动化生产，而当今世界正处于第四次工业革命的浪潮中，以人工智能，大数
+据、机器人为代表的新技术正推动着工业生产进行新一轮的变革，工业自动化，信息化、智能化逐
+渐成为未来制造业的发展趋势，传统制造业对于产业转型的需求日益迫切，在此背景下，国务院于
+2015 年5 月提出《中国制造2025》十年行动纲领，目的就是为了加快推动新一代信息技术与传统
+制造业融合发展，将智能制造作为主攻方向，着力发展智能装备和智能产品，推进生产过程智能化，
+机器人凭借着强大的通用性，逐渐成为产业转型
+
+	\section{国内外研究现状}
+	\subsection{国内}
+	\subsection{国外}
+	
+	\section{课题研究内容及实施方案}
+	\subsection{研究内容}
+	\subsection{实施方案}
+	
+	\section{参考文献}
+	
+	\section{进度安排}
+	
+	\section{指导老师审批意见}
+\end{document}
