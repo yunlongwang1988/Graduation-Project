@@ -1,0 +1,13 @@
+\beamer@sectionintoc {1}{任务概览}{3}{0}{1}
+\beamer@sectionintoc {2}{工具选择}{6}{0}{2}
+\beamer@subsectionintoc {2}{1}{硬件选择}{6}{0}{2}
+\beamer@subsectionintoc {2}{2}{软件选择}{14}{0}{2}
+\beamer@sectionintoc {3}{研究内容}{21}{0}{3}
+\beamer@subsectionintoc {3}{1}{相机模型}{21}{0}{3}
+\beamer@subsectionintoc {3}{2}{相机畸变}{25}{0}{3}
+\beamer@subsectionintoc {3}{3}{数理基础：矩阵、坐标系、齐次坐标}{31}{0}{3}
+\beamer@subsectionintoc {3}{4}{张正友标定法：求解内外参及单应矩阵}{57}{0}{3}
+\beamer@subsectionintoc {3}{5}{单目相机标定求解左右相机内外参矩阵}{72}{0}{3}
+\beamer@subsectionintoc {3}{6}{双目相机标定求解左右相机位姿关系}{74}{0}{3}
+\beamer@subsectionintoc {3}{7}{机器人手眼标定实现物品抓取}{85}{0}{3}
+\beamer@sectionintoc {4}{参考文献(Reference)}{87}{0}{4}

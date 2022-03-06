@@ -1,0 +1,16 @@
+\beamer@slide {标定板}{13}
+\beamer@slide {旋转矩阵-三个旋转向量相乘}{41}
+\beamer@slide {旋转矩阵-抽象形式}{41}
+\beamer@slide {内参矩阵求解-内参矩阵}{49}
+\beamer@slide {单应矩阵包含内外参矩阵}{51}
+\beamer@slide {单应性}{55}
+\beamer@slide {线性解法}{60}
+\beamer@slide {内参矩阵的求解约束条件1}{64}
+\beamer@slide {内参矩阵的求解约束条件2}{64}
+\beamer@slide {内参矩阵的求解-B矩阵}{65}
+\beamer@slide {内参矩阵的求解-H矩阵的化简}{66}
+\beamer@slide {内参矩阵的求解-hb-vb代换}{67}
+\beamer@slide {内参矩阵求解-b}{68}
+\beamer@slide {内参矩阵求解-每张图片都可以得到两个等式}{69}
+\beamer@slide {内参矩阵求解-每张图片将矩阵垒两行}{69}
+\beamer@slide {手眼标定分类}{86}
